@@ -29,28 +29,28 @@ LayupDrawer.prototype = {
       return;
     }
 
-    var context = this.canvas.getContext("2d");
+    const context = this.canvas.getContext("2d");
 
     // Bar settings
-    var barHeight = 40;
-    var barSpacing = 0;
-    var padding = 30;
-    var marginRight = 140;
-    var barColor = "blue";
-    var borderColor = "green";
-    var imageSrc = "images/paralel-grain-0.jpg";
-    var imageSrc90deg = "images/perpendicular-grain-90.jpg";
+    const barHeight = 40;
+    const barSpacing = 0;
+    const padding = 30;
+    const marginRight = 140;
+    const barColor = "blue";
+    const borderColor = "green";
+    const imageSrc = "images/paralel-grain-0.jpg";
+    const imageSrc90deg = "images/perpendicular-grain-90.jpg";
 
     // Draw X and Y axis titles
-    var xAxisTitle = "Primary Direction";
-    var yAxisTitle = "Slab Thickness (mm)";
+    const xAxisTitle = "Primary Direction";
+    const yAxisTitle = "Slab Thickness (mm)";
 
     // Set the canvas height based on the number of bars
     this.canvas.height = (barHeight + barSpacing) * Object.keys(layup).length + padding;
 
     // Create an image object
-    var img = new Image();
-    var img90deg = new Image();
+    const img = new Image();
+    const img90deg = new Image();
 
     // Load the second image after the first one has loaded
     img.onload = () => {
@@ -74,7 +74,7 @@ LayupDrawer.prototype = {
       context.restore();
 
       Object.entries(layup).forEach(([key, layer], i) => {
-        var barWidth = this.canvas.width - marginRight;
+        const barWidth = this.canvas.width - marginRight;
 
         // Draw the bar with border
         context.fillStyle = barColor;
@@ -94,7 +94,7 @@ LayupDrawer.prototype = {
         context.stroke();
 
         // Draw image pattern based on the condition
-        var pattern;
+        let pattern;
         if (layer.angle === 90) {
           pattern = context.createPattern(img90deg, "repeat");
           context.fillStyle = pattern;
@@ -142,7 +142,7 @@ LayupDrawer.prototype = {
 
       // Add labels on the x-axis at the bottom
       // Example: Label every 50 units
-      for (var i = 0; i <= this.canvas.width - 50; i += 50) {
+      for (let i = 0; i <= this.canvas.width - 50; i += 50) {
         context.fillText(
           i,
           50 + i,
@@ -161,7 +161,7 @@ LayupDrawer.prototype = {
 
       // Add labels on the y-axis at the bottom
       // Example: Label every 50 units
-      for (var i = 0; i <= this.canvas.height - padding; i += 50) {
+      for (let i = 0; i <= this.canvas.height - padding; i += 50) {
         if (this.canvas.height - i - padding != 0)
         context.fillText(
           this.canvas.height - i - padding,
