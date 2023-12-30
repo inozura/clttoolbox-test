@@ -5,16 +5,20 @@ function LayupDrawer() {
    * Canvas element
    */
   this.canvas = null;
+  this.heightCanvas = 300;
+  this.widthCanvas = 400;
 }
 
 LayupDrawer.prototype = {
   /**
    * Configure the canvas
    *
-   * @param {HTMLCanvasElement} canvas  Canvas element
+   * @param {HTMLCanvasElement, {height?: int, width?: int}} canvas  Canvas element
    */
-  init: function (canvas) {
+  init: function (canvas, conf) {
     this.canvas = canvas;
+    if (conf?.height) this.heightCanvas = conf.height;
+    if (conf?.width) this.widthCanvas = conf.width;
   },
 
   /**
@@ -30,9 +34,9 @@ LayupDrawer.prototype = {
     }
 
     const context = this.canvas.getContext("2d");
+    const layupLength = Object.keys(layup).length;
 
     // Bar settings
-    const barHeight = 40;
     const barSpacing = 0;
     const padding = 30;
     const marginRight = 140;
@@ -45,8 +49,15 @@ LayupDrawer.prototype = {
     const xAxisTitle = "Primary Direction";
     const yAxisTitle = "Slab Thickness (mm)";
 
-    // Set the canvas height based on the number of bars
-    this.canvas.height = (barHeight + barSpacing) * Object.keys(layup).length + padding;
+    // Set a maximum height for the canvas
+    const maxCanvasHeight = this.heightCanvas + padding;
+
+    // Calculate dynamic bar height based on the available space
+    const dynamicBarHeight = (maxCanvasHeight - padding) / layupLength;
+
+    // Set the canvas height
+    this.canvas.width = this.widthCanvas + marginRight;
+    this.canvas.height = Math.min((dynamicBarHeight + barSpacing) * layupLength + padding, maxCanvasHeight);
 
     // Create an image object
     const img = new Image();
@@ -78,19 +89,19 @@ LayupDrawer.prototype = {
 
         // Draw the bar with border
         context.fillStyle = barColor;
-        context.fillRect(50, i * (barHeight + barSpacing), barWidth, barHeight);
+        context.fillRect(50, i * (dynamicBarHeight + barSpacing), barWidth, dynamicBarHeight);
 
         // Draw border-top
         context.strokeStyle = borderColor;
         context.beginPath();
-        context.moveTo(50, i * (barHeight + barSpacing));
-        context.lineTo(50 + barWidth, i * (barHeight + barSpacing));
+        context.moveTo(50, i * (dynamicBarHeight + barSpacing));
+        context.lineTo(50 + barWidth, i * (dynamicBarHeight + barSpacing));
         context.stroke();
 
         // Draw border-bottom
         context.beginPath();
-        context.moveTo(50, (i + 1) * (barHeight + barSpacing));
-        context.lineTo(50 + barWidth, (i + 1) * (barHeight + barSpacing));
+        context.moveTo(50, (i + 1) * (dynamicBarHeight + barSpacing));
+        context.lineTo(50 + barWidth, (i + 1) * (dynamicBarHeight + barSpacing));
         context.stroke();
 
         // Draw image pattern based on the condition
@@ -102,9 +113,9 @@ LayupDrawer.prototype = {
           // Use a fixed width for the image pattern
           context.fillRect(
             50,
-            i * (barHeight + barSpacing),
+            i * (dynamicBarHeight + barSpacing),
             barWidth,
-            barHeight
+            dynamicBarHeight
           );
         } else {
           pattern = context.createPattern(img, "repeat");
@@ -113,9 +124,9 @@ LayupDrawer.prototype = {
           // Use a fixed width for the image pattern
           context.fillRect(
             50,
-            i * (barHeight + barSpacing),
+            i * (dynamicBarHeight + barSpacing),
             barWidth,
-            barHeight
+            dynamicBarHeight
           );
         }
 
@@ -124,7 +135,7 @@ LayupDrawer.prototype = {
         context.fillText(
           `${key}: ${layer.thickness}mm ${layer.grade}`,
           50 + barWidth + 5,
-          (i + 0.5) * (barHeight + barSpacing)
+          (i + 0.5) * (dynamicBarHeight + barSpacing)
         );
       });
     };
@@ -147,7 +158,7 @@ LayupDrawer.prototype = {
           i,
           50 + i,
           this.canvas.height - padding + 15
-        ); // Adjusted the y-coordinate
+        );
       }
     };
 
@@ -167,7 +178,7 @@ LayupDrawer.prototype = {
           this.canvas.height - i - padding,
           30,
           i + padding - 15
-        ); // Adjusted the y-coordinate
+        );
       }
     };
 

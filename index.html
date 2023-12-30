@@ -59,13 +59,37 @@
                 angle : 0,      // in degree
                 grade : 'MGP10',
             },
+            t6 : {
+                label : 'T6',
+                thickness : 45, // in mm
+                angle : 0,      // in degree
+                grade : 'MGP10',
+            },
+            t7 : {
+                label : 'T7',
+                thickness : 30, // in mm
+                angle : 90,      // in degree
+                grade : 'MGP10',
+            },
+            t8 : {
+                label : 'T8',
+                thickness : 45, // in mm
+                angle : 0,      // in degree
+                grade : 'MGP10',
+            },
+            t9 : {
+                label : 'T9',
+                thickness : 30, // in mm
+                angle : 90,      // in degree
+                grade : 'MGP10',
+            },
 
         };
 
         var layupDrawer = new LayupDrawer();
         var playground = document.getElementById('playground');
 
-        layupDrawer.init(playground);
+        layupDrawer.init(playground, {height: 400, width: 500});
         layupDrawer.drawLayup(cltLayup);
     </script>
 </body>
